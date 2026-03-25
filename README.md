@@ -2,75 +2,117 @@
 
 English | [Tiếng Việt](README.vi.md) | [简体中文](README.zh-CN.md)
 
-CodexKit Engineer Pro Final Plus is a **Codex-native engineering operating system** for teams that want AI coding agents to behave less like “vibe coders” and more like senior engineers.
+**Architecture-first operating system for Codex teams.**
 
-This version is intentionally more opinionated than v1:
+CodexKit helps AI coding agents behave less like "vibe coders" and more like senior engineers: understand the repository first, make architecture and constraints explicit, plan in reviewable slices, validate honestly, and leave durable artifacts behind.
 
-- **architecture-first, not code-first**
-- **spec -> architecture -> nfr -> plan -> tasks -> execute**
-- **explicit change classes** for tiny fixes, bounded features, cross-cutting changes, and new projects
-- **maintainability, scalability, performance, reliability, and rollback** treated as first-class artifacts
-- **repo-native skills + subagents + CI prompts** instead of a giant custom command DSL
+## Why Teams Use CodexKit
 
-## What is new in the final release
+Most AI coding setups are good at producing diffs and bad at producing engineering discipline.
 
-1. A mandatory **bootstrap + architecture gate** for new projects and non-trivial features
-2. A deep bootstrap lane that scans the repo, generates project memory, and updates CodexKit guidance for the current architecture
-3. A `bootstrap_curator` agent and deterministic bootstrap scripts
-4. Generated project-context docs plus machine-readable repo profiles, dashboards, continuity memory, and constitution rules
-5. Existing greenfield and brownfield lanes:
-   - `$project-bootstrap`
-   - `$brownfield-mapping`
-   - `$architecture-discovery`
-   - `$architecture-review`
-   - `$nfr-capture`
-6. More architecture-heavy agents, now including `bootstrap_curator`, `constitution_keeper`, `consistency_auditor`, `knowledge_librarian`, `debug_detective`, and `ui_ux_auditor`
-7. Richer templates that cite project context sources and enforce analysis, test strategy, and implementation readiness artifacts
-8. Stronger local validation:
-   - `scripts/validate-plans.py`
-   - `scripts/validate-bootstrap.py`
-   - `scripts/audit-placeholders.py`
-9. A GitHub **architecture gate** workflow and a new **artifact consistency** workflow
-10. A **constitution + continuity + artifact-consistency + closeout** layer inspired by the best parts of spec-driven and agentic workflow systems
-11. Extended project-context outputs: constitution, module index, delivery system, hotspots, design-system map, agent context, continuity, and dashboard
-12. New implementation disciplines: `$artifact-consistency`, `$implementation-readiness`, `$tdd-loop`, `$systematic-debugging`, `$closeout-learning`, and `$design-system-forensics`
-13. Optional nested `AGENTS.md` generation for large repos
+CodexKit fixes that by giving every repository a shared operating model:
 
-## Quick command layer
+- `AGENTS.md` for durable guidance and guardrails
+- `.agents/skills/` for reusable workflows
+- `.codex/agents/` for specialist delegation
+- `plans/templates/` for spec, architecture, NFR, plan, task, rollout, and review artifacts
+- `scripts/` for deterministic bootstrap, validation, and scaffolding
+- `.github/workflows/` for CI-based Codex review and release checks
 
-This edition adds a thin alias surface so you can invoke the kit quickly without memorizing every canonical skill name.
+## In The Box
 
-Supported forms:
+| Asset | Count | Purpose |
+|---|---:|---|
+| Agents | 22 | Specialized subagents for architecture, review, security, docs, debugging, release, and more |
+| Skills | 35 | Reusable workflows for planning, execution, validation, and closeout |
+| Aliases | 33 | `/ck:` and `$ck-` shortcuts over canonical skills |
+| Templates | 23 | Delivery artifacts for `L0` to `L3` work |
+| Workflows | 6 | Codex-powered GitHub automation for review, docs drift, release readiness, and architecture gates |
+| Runbooks | 9 | Durable operational guidance for releases, rollback, debugging, and governance |
 
-- `/ck:<alias> [payload]` in chat
-- `$ck-<alias> [payload]` in skill-style mode
-- canonical direct skills like `$plan-feature` still work
+## What Makes It Different
 
-Examples:
+- **Architecture-first, not code-first**
+- **Spec -> architecture -> NFR -> plan -> tasks -> execute**
+- **Explicit change classes** for tiny fixes, bounded features, cross-cutting work, and new systems
+- **Rollback, observability, and maintainability** treated as first-class delivery requirements
+- **Thin command layer** instead of a giant custom DSL
+- **Durable repo memory** so future sessions do not start from zero
 
-```text
-/ck:bootstrap
-/ck:feature tenant-rate-limits
-/ck:plan-feature add per-tenant rate limits
-/ck:ready
-/ck:build phase 1
-/ck:review
-/ck:ship
+## Quick Start
+
+### 1. Copy the kit into your repository root
+
+Make sure these paths exist:
+
+- `AGENTS.md`
+- `.codex/config.toml`
+- `.codex/agents/`
+- `.agents/skills/`
+- `plans/templates/`
+- `docs/`
+- `scripts/`
+
+### 2. Bootstrap the repository context
+
+```bash
+python3 scripts/bootstrap-codexkit.py --apply
 ```
 
-Read `docs/command-palette.md` for the full alias catalog and routing rules.
+This generates durable project memory under `docs/project-context/` and machine-readable repo facts under `.codex/project-context/`.
 
-## Design principles
+### 3. Review the generated guardrails
 
-1. **Understand the system before changing it**
-2. **Do architecture early, but keep it proportional**
-3. **Use the simplest design that can survive growth**
-4. **Prefer reversible slices and boring migrations**
-5. **Measure hot paths; do not guess**
-6. **Make operations, observability, and rollback explicit**
-7. **Leave durable artifacts, not just chat history**
+Read these first:
 
-## Core workflow
+- `docs/project-context/index.md`
+- `docs/project-context/08-project-constitution.md`
+- `docs/project-context/13-agent-context.md`
+- `docs/project-context/14-continuity.md`
+
+### 4. Validate the kit locally
+
+```bash
+scripts/check-kit.sh
+```
+
+### 5. Start the first initiative
+
+```bash
+scripts/new-feature.sh tenant-rate-limits
+```
+
+Then continue with:
+
+```text
+$bootstrap
+$continuity-memory
+$constitution-governance
+$brownfield-mapping
+$architecture-discovery
+$nfr-capture
+$plan-feature
+$artifact-consistency
+$implementation-readiness
+$task-breakdown
+$tdd-loop
+$execute-plan
+```
+
+## How Work Flows
+
+```mermaid
+flowchart LR
+    A["Request / Bug / Idea"] --> B["Bootstrap<br/>repo context + guardrails"]
+    B --> C["Architecture<br/>boundaries + NFRs + decisions"]
+    C --> D["Plan<br/>milestones + tasks + rollout"]
+    D --> E["Readiness<br/>consistency + implementation checks"]
+    E --> F["Execute<br/>small reversible slices"]
+    F --> G["Review<br/>owner, security, perf, docs"]
+    G --> H["Ship / Closeout<br/>release notes + lessons learned"]
+```
+
+## Choose The Right Lane
 
 ### New project or major subsystem
 
@@ -78,7 +120,7 @@ Read `docs/command-palette.md` for the full alias catalog and routing rules.
 scripts/new-project.sh billing-platform
 ```
 
-Then use:
+Recommended prompts:
 
 ```text
 $bootstrap
@@ -86,6 +128,7 @@ $continuity-memory
 $constitution-governance
 $project-bootstrap
 $architecture-review
+$architecture-decision
 $plan-feature
 $artifact-consistency
 $implementation-readiness
@@ -98,7 +141,7 @@ $task-breakdown
 scripts/new-feature.sh tenant-rate-limits
 ```
 
-Then use:
+Recommended prompts:
 
 ```text
 $bootstrap
@@ -121,18 +164,42 @@ $execute-plan
 $fix-issue
 ```
 
-Use the architecture lane only if the bug exposes a deeper design problem.
+Use the architecture lane only if the bug exposes deeper boundary or design problems.
 
-## Required artifacts by work size
+## Quick Command Layer
+
+CodexKit adds a thin alias layer so teams can move faster without inventing a second workflow system.
+
+Supported forms:
+
+- `/ck:<alias> [payload]` in chat
+- `$ck-<alias> [payload]` in skill-style mode
+- canonical direct skills like `$plan-feature`
+
+Examples:
+
+```text
+/ck:bootstrap
+/ck:feature tenant-rate-limits
+/ck:plan-feature add per-tenant rate limits
+/ck:ready
+/ck:build phase 1
+/ck:review
+/ck:ship
+```
+
+Read `docs/command-palette.md` for the full alias catalog and routing rules.
+
+## Required Artifacts By Change Size
 
 | Change class | Typical scope | Minimum artifacts |
 |---|---|---|
-| `L0` | tiny fix, docs, one-file safe change | validation note, optional repro |
-| `L1` | bounded feature in one subsystem | `spec.md`, `analysis.md`, `architecture.md`, `nfr.md`, `plan.md`, `tasks.md`, `test-strategy.md`, `consistency-report.md` |
-| `L2` | cross-cutting change, migration, multiple modules | `L1` artifacts plus `decision-matrix.md`, `rollout.md`, `observability.md`, `risk-register.md`, `perf-budget.md`, `threat-model.md` |
-| `L3` | new project, platform capability, large subsystem | everything in `L2` plus `context-map.md`, `interfaces.md`, `data-model.md`, `runbook.md`, and `adr.md` |
+| `L0` | Tiny fix, docs update, one-file safe change | Validation note, optional repro |
+| `L1` | Bounded feature in one subsystem | `spec.md`, `analysis.md`, `architecture.md`, `nfr.md`, `plan.md`, `tasks.md`, `test-strategy.md`, `consistency-report.md` |
+| `L2` | Cross-cutting change, migration, multiple modules | Everything in `L1` plus `decision-matrix.md`, `rollout.md`, `observability.md`, `risk-register.md`, `perf-budget.md`, `threat-model.md` |
+| `L3` | New project, platform capability, large subsystem | Everything in `L2` plus `context-map.md`, `interfaces.md`, `data-model.md`, `runbook.md`, and `adr.md` |
 
-## Repository layout
+## Repository Layout
 
 ```text
 .
@@ -157,36 +224,62 @@ Use the architecture lane only if the bug exposes a deeper design problem.
 └── scripts/
 ```
 
-## Suggested adoption order
+## Recommended Reading Order
 
-1. Copy the kit into the root of your repository.
-2. Run `python3 scripts/bootstrap-codexkit.py --apply`.
-3. Review `docs/project-context/` and the managed bootstrap block in `AGENTS.md`.
-4. Review `.codex/config.toml`.
-5. Keep `plans/templates/` committed so all agents share the same delivery grammar.
-6. Run `scripts/check-kit.sh`.
-7. Enable GitHub workflows after your tests and secrets are stable.
-8. Run `scripts/audit-placeholders.py` after tailoring the kit to your repo.
+### Start here
 
-## Files worth reading first
-
+- `docs/installation.md`
 - `docs/bootstrap-playbook.md`
 - `docs/project-memory-system.md`
 - `docs/architecture-first-development.md`
+
+### Then learn the lanes
+
 - `docs/new-project-playbook.md`
 - `docs/new-feature-playbook.md`
 - `docs/brownfield-playbook.md`
 - `docs/quality-gates.md`
-- `docs/agent-roster.md`
+- `docs/implementation-readiness.md`
+
+### Then learn the command surface
+
 - `docs/command-palette.md`
 - `docs/skill-catalog.md`
-- `docs/v3-improvements.md`
+- `docs/agent-roster.md`
+- `docs/prompt-playbook.md`
+
+### Then go deeper
+
 - `docs/final-improvements.md`
 - `docs/external-benchmark-analysis.md`
 - `docs/source-patterns.md`
-- `docs/constitution-playbook.md`
-- `docs/continuity-memory.md`
-- `docs/implementation-readiness.md`
 - `docs/systematic-debugging.md`
 - `docs/design-system-forensics.md`
 - `docs/initiative-lifecycle.md`
+
+## Good Fit
+
+CodexKit is a strong fit when:
+
+- your team uses Codex heavily and wants more discipline than chat history alone can provide
+- architecture drift, weak reviews, or inconsistent rollout quality keep causing pain
+- you want AI work to produce artifacts that humans can review, audit, and reuse
+- you need a repeatable workflow across planning, implementation, debugging, review, and release
+
+CodexKit is probably overkill when:
+
+- the repository is a disposable spike or throwaway prototype
+- there is no need for durable architecture, review, or release discipline
+- the team wants a minimal prompt pack instead of a repo operating model
+
+## Read More
+
+- Installation: `docs/installation.md`
+- Customization: `docs/customization-guide.md`
+- Adoption plan: `docs/adoption-roadmap.md`
+- Release checklist: `docs/release-checklist.md`
+- Security model: `docs/security-model.md`
+
+## License
+
+This repository is distributed under the MIT License. See `LICENSE`.

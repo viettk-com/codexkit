@@ -2,75 +2,117 @@
 
 [English](README.md) | Tiếng Việt | [简体中文](README.zh-CN.md)
 
-CodexKit Engineer Pro Final Plus là một **hệ điều hành kỹ thuật native cho Codex** dành cho các nhóm muốn AI coding agent hành xử bớt giống kiểu “code theo cảm hứng” và giống kỹ sư senior hơn.
+**Hệ điều hành kỹ thuật architecture-first cho các team dùng Codex.**
 
-Phiên bản này có chủ đích định hướng mạnh hơn v1:
+CodexKit giúp AI coding agent bớt giống kiểu "code theo cảm hứng" và giống kỹ sư senior hơn: hiểu repo trước, làm rõ kiến trúc và ràng buộc, lập kế hoạch theo các lát cắt dễ review, xác thực trung thực, và để lại artifact bền vững.
 
-- **ưu tiên kiến trúc trước, không ưu tiên viết code trước**
-- **spec -> architecture -> nfr -> plan -> tasks -> execute**
-- **phân loại thay đổi rõ ràng** cho lỗi nhỏ, tính năng giới hạn, thay đổi cắt ngang nhiều phần, và dự án mới
-- **maintainability, scalability, performance, reliability và rollback** được xem là artifact hạng nhất
-- **skills + subagents + CI prompts native theo repo** thay vì một DSL lệnh tùy biến khổng lồ
+## Vì Sao Team Dùng CodexKit
 
-## Điểm mới trong bản phát hành cuối
+Phần lớn thiết lập AI coding hiện nay giỏi tạo diff nhưng yếu ở kỷ luật kỹ thuật.
 
-1. Một **bootstrap + architecture gate** bắt buộc cho dự án mới và các tính năng không tầm thường
-2. Một lane bootstrap sâu có thể quét repo, tạo project memory và cập nhật hướng dẫn CodexKit theo kiến trúc hiện tại
-3. Agent `bootstrap_curator` và các script bootstrap có tính quyết định
-4. Tài liệu project-context được sinh ra cùng repo profile dạng máy đọc được, dashboard, continuity memory và constitution rules
-5. Các lane greenfield và brownfield sẵn có:
-   - `$project-bootstrap`
-   - `$brownfield-mapping`
-   - `$architecture-discovery`
-   - `$architecture-review`
-   - `$nfr-capture`
-6. Nhiều agent thiên về kiến trúc hơn, gồm `bootstrap_curator`, `constitution_keeper`, `consistency_auditor`, `knowledge_librarian`, `debug_detective` và `ui_ux_auditor`
-7. Template phong phú hơn, có trích dẫn project context và ép buộc analysis, test strategy và implementation readiness artifact
-8. Xác thực cục bộ mạnh hơn:
-   - `scripts/validate-plans.py`
-   - `scripts/validate-bootstrap.py`
-   - `scripts/audit-placeholders.py`
-9. Workflow GitHub **architecture gate** và workflow **artifact consistency** mới
-10. Một lớp **constitution + continuity + artifact-consistency + closeout** lấy cảm hứng từ những điểm tốt nhất của workflow spec-driven và agentic
-11. Project-context mở rộng: constitution, module index, delivery system, hotspots, design-system map, agent context, continuity và dashboard
-12. Kỷ luật triển khai mới: `$artifact-consistency`, `$implementation-readiness`, `$tdd-loop`, `$systematic-debugging`, `$closeout-learning` và `$design-system-forensics`
-13. Có thể sinh `AGENTS.md` lồng nhau tùy chọn cho các repo lớn
+CodexKit xử lý vấn đề đó bằng cách cung cấp cho mỗi repository một mô hình vận hành thống nhất:
 
-## Lớp lệnh nhanh
+- `AGENTS.md` cho guidance và guardrail bền vững
+- `.agents/skills/` cho workflow tái sử dụng
+- `.codex/agents/` cho cơ chế phân vai specialist
+- `plans/templates/` cho artifact spec, architecture, NFR, plan, task, rollout và review
+- `scripts/` cho bootstrap, validation và scaffolding có tính quyết định
+- `.github/workflows/` cho Codex review và release check ở tầng CI
 
-Phiên bản này thêm một bề mặt alias mỏng để bạn gọi bộ kit nhanh hơn mà không cần nhớ toàn bộ tên skill chính tắc.
+## Có Gì Trong Bộ Kit
 
-Các dạng hỗ trợ:
+| Thành phần | Số lượng | Vai trò |
+|---|---:|---|
+| Agents | 22 | Subagent chuyên biệt cho architecture, review, security, docs, debugging, release và hơn thế nữa |
+| Skills | 35 | Workflow tái sử dụng cho planning, execution, validation và closeout |
+| Aliases | 33 | Shortcut `/ck:` và `$ck-` bao ngoài các skill chính tắc |
+| Templates | 23 | Artifact giao hàng cho công việc từ `L0` đến `L3` |
+| Workflows | 6 | Tự động hóa GitHub dùng Codex cho review, docs drift, release readiness và architecture gate |
+| Runbooks | 9 | Hướng dẫn vận hành bền vững cho release, rollback, debugging và governance |
 
-- `/ck:<alias> [payload]` trong chat
-- `$ck-<alias> [payload]` ở chế độ giống skill
-- các skill chính tắc như `$plan-feature` vẫn dùng bình thường
+## Điểm Khác Biệt
 
-Ví dụ:
+- **Ưu tiên kiến trúc, không ưu tiên viết code trước**
+- **Spec -> architecture -> NFR -> plan -> tasks -> execute**
+- **Phân loại thay đổi rõ ràng** cho lỗi nhỏ, tính năng giới hạn, thay đổi cắt ngang và hệ thống mới
+- **Rollback, observability và maintainability** là yêu cầu giao hàng hạng nhất
+- **Lớp lệnh mỏng** thay vì một DSL tùy biến khổng lồ
+- **Bộ nhớ repo bền vững** để các session sau không phải bắt đầu lại từ số 0
 
-```text
-/ck:bootstrap
-/ck:feature tenant-rate-limits
-/ck:plan-feature add per-tenant rate limits
-/ck:ready
-/ck:build phase 1
-/ck:review
-/ck:ship
+## Bắt Đầu Nhanh
+
+### 1. Chép bộ kit vào thư mục gốc repository
+
+Đảm bảo các đường dẫn sau tồn tại:
+
+- `AGENTS.md`
+- `.codex/config.toml`
+- `.codex/agents/`
+- `.agents/skills/`
+- `plans/templates/`
+- `docs/`
+- `scripts/`
+
+### 2. Bootstrap ngữ cảnh repository
+
+```bash
+python3 scripts/bootstrap-codexkit.py --apply
 ```
 
-Đọc `docs/command-palette.md` để xem đầy đủ alias và luật định tuyến.
+Lệnh này sinh ra project memory bền vững trong `docs/project-context/` và dữ kiện repo dạng máy đọc được trong `.codex/project-context/`.
 
-## Nguyên tắc thiết kế
+### 3. Xem lại guardrail được sinh ra
 
-1. **Hiểu hệ thống trước khi thay đổi nó**
-2. **Làm kiến trúc sớm, nhưng giữ tỷ lệ hợp lý**
-3. **Dùng thiết kế đơn giản nhất vẫn có thể chịu được tăng trưởng**
-4. **Ưu tiên các lát cắt có thể rollback và migration nhàm chán nhưng an toàn**
-5. **Đo các hot path; đừng đoán**
-6. **Biến vận hành, observability và rollback thành thứ tường minh**
-7. **Để lại artifact bền vững, không chỉ lịch sử chat**
+Đọc các file này trước:
 
-## Workflow cốt lõi
+- `docs/project-context/index.md`
+- `docs/project-context/08-project-constitution.md`
+- `docs/project-context/13-agent-context.md`
+- `docs/project-context/14-continuity.md`
+
+### 4. Kiểm tra bộ kit cục bộ
+
+```bash
+scripts/check-kit.sh
+```
+
+### 5. Bắt đầu initiative đầu tiên
+
+```bash
+scripts/new-feature.sh tenant-rate-limits
+```
+
+Sau đó tiếp tục với:
+
+```text
+$bootstrap
+$continuity-memory
+$constitution-governance
+$brownfield-mapping
+$architecture-discovery
+$nfr-capture
+$plan-feature
+$artifact-consistency
+$implementation-readiness
+$task-breakdown
+$tdd-loop
+$execute-plan
+```
+
+## Luồng Làm Việc
+
+```mermaid
+flowchart LR
+    A["Request / Bug / Idea"] --> B["Bootstrap<br/>repo context + guardrails"]
+    B --> C["Architecture<br/>boundaries + NFRs + decisions"]
+    C --> D["Plan<br/>milestones + tasks + rollout"]
+    D --> E["Readiness<br/>consistency + implementation checks"]
+    E --> F["Execute<br/>small reversible slices"]
+    F --> G["Review<br/>owner, security, perf, docs"]
+    G --> H["Ship / Closeout<br/>release notes + lessons learned"]
+```
+
+## Chọn Đúng Lane
 
 ### Dự án mới hoặc major subsystem
 
@@ -78,7 +120,7 @@ Ví dụ:
 scripts/new-project.sh billing-platform
 ```
 
-Sau đó dùng:
+Prompt gợi ý:
 
 ```text
 $bootstrap
@@ -86,6 +128,7 @@ $continuity-memory
 $constitution-governance
 $project-bootstrap
 $architecture-review
+$architecture-decision
 $plan-feature
 $artifact-consistency
 $implementation-readiness
@@ -98,7 +141,7 @@ $task-breakdown
 scripts/new-feature.sh tenant-rate-limits
 ```
 
-Sau đó dùng:
+Prompt gợi ý:
 
 ```text
 $bootstrap
@@ -121,18 +164,42 @@ $execute-plan
 $fix-issue
 ```
 
-Chỉ dùng lane kiến trúc nếu lỗi đó lộ ra một vấn đề thiết kế sâu hơn.
+Chỉ đi vào lane kiến trúc nếu lỗi đó làm lộ ra vấn đề boundary hoặc design sâu hơn.
 
-## Artifact bắt buộc theo quy mô thay đổi
+## Lớp Lệnh Nhanh
+
+CodexKit thêm một lớp alias mỏng để team đi nhanh hơn mà không phải tạo ra một workflow hệ hai.
+
+Các dạng hỗ trợ:
+
+- `/ck:<alias> [payload]` trong chat
+- `$ck-<alias> [payload]` ở chế độ giống skill
+- các skill chính tắc như `$plan-feature`
+
+Ví dụ:
+
+```text
+/ck:bootstrap
+/ck:feature tenant-rate-limits
+/ck:plan-feature add per-tenant rate limits
+/ck:ready
+/ck:build phase 1
+/ck:review
+/ck:ship
+```
+
+Đọc `docs/command-palette.md` để xem đầy đủ danh mục alias và luật định tuyến.
+
+## Artifact Bắt Buộc Theo Quy Mô Thay Đổi
 
 | Change class | Phạm vi điển hình | Artifact tối thiểu |
 |---|---|---|
-| `L0` | lỗi nhỏ, docs, thay đổi an toàn một file | ghi chú validation, có thể kèm repro |
-| `L1` | tính năng giới hạn trong một subsystem | `spec.md`, `analysis.md`, `architecture.md`, `nfr.md`, `plan.md`, `tasks.md`, `test-strategy.md`, `consistency-report.md` |
-| `L2` | thay đổi cắt ngang, migration, nhiều module | toàn bộ `L1` cộng `decision-matrix.md`, `rollout.md`, `observability.md`, `risk-register.md`, `perf-budget.md`, `threat-model.md` |
-| `L3` | dự án mới, platform capability, subsystem lớn | toàn bộ `L2` cộng `context-map.md`, `interfaces.md`, `data-model.md`, `runbook.md`, và `adr.md` |
+| `L0` | Lỗi nhỏ, cập nhật docs, thay đổi an toàn một file | Ghi chú validation, có thể kèm repro |
+| `L1` | Tính năng giới hạn trong một subsystem | `spec.md`, `analysis.md`, `architecture.md`, `nfr.md`, `plan.md`, `tasks.md`, `test-strategy.md`, `consistency-report.md` |
+| `L2` | Thay đổi cắt ngang, migration, nhiều module | Toàn bộ `L1` cộng `decision-matrix.md`, `rollout.md`, `observability.md`, `risk-register.md`, `perf-budget.md`, `threat-model.md` |
+| `L3` | Dự án mới, platform capability, subsystem lớn | Toàn bộ `L2` cộng `context-map.md`, `interfaces.md`, `data-model.md`, `runbook.md`, và `adr.md` |
 
-## Bố cục repository
+## Bố Cục Repository
 
 ```text
 .
@@ -157,36 +224,62 @@ Chỉ dùng lane kiến trúc nếu lỗi đó lộ ra một vấn đề thiết
 └── scripts/
 ```
 
-## Thứ tự áp dụng gợi ý
+## Thứ Tự Nên Đọc
 
-1. Chép bộ kit vào thư mục gốc của repository.
-2. Chạy `python3 scripts/bootstrap-codexkit.py --apply`.
-3. Xem lại `docs/project-context/` và khối bootstrap được quản lý trong `AGENTS.md`.
-4. Xem lại `.codex/config.toml`.
-5. Giữ `plans/templates/` trong repo để mọi agent dùng chung cùng một delivery grammar.
-6. Chạy `scripts/check-kit.sh`.
-7. Bật GitHub workflows sau khi test và secrets của bạn đã ổn định.
-8. Chạy `scripts/audit-placeholders.py` sau khi tinh chỉnh bộ kit cho repo của bạn.
+### Bắt đầu ở đây
 
-## Các file nên đọc đầu tiên
-
+- `docs/installation.md`
 - `docs/bootstrap-playbook.md`
 - `docs/project-memory-system.md`
 - `docs/architecture-first-development.md`
+
+### Sau đó học các lane
+
 - `docs/new-project-playbook.md`
 - `docs/new-feature-playbook.md`
 - `docs/brownfield-playbook.md`
 - `docs/quality-gates.md`
-- `docs/agent-roster.md`
+- `docs/implementation-readiness.md`
+
+### Sau đó học bề mặt lệnh
+
 - `docs/command-palette.md`
 - `docs/skill-catalog.md`
-- `docs/v3-improvements.md`
+- `docs/agent-roster.md`
+- `docs/prompt-playbook.md`
+
+### Muốn đào sâu thêm
+
 - `docs/final-improvements.md`
 - `docs/external-benchmark-analysis.md`
 - `docs/source-patterns.md`
-- `docs/constitution-playbook.md`
-- `docs/continuity-memory.md`
-- `docs/implementation-readiness.md`
 - `docs/systematic-debugging.md`
 - `docs/design-system-forensics.md`
 - `docs/initiative-lifecycle.md`
+
+## Khi Nào Phù Hợp
+
+CodexKit rất phù hợp khi:
+
+- team của bạn dùng Codex nhiều và muốn có kỷ luật vượt ra ngoài chat history
+- architecture drift, review yếu, hoặc rollout thiếu chắc chắn đang gây đau đầu
+- bạn muốn công việc của AI sinh ra artifact mà con người có thể review, audit và tái sử dụng
+- bạn cần một workflow lặp lại được xuyên suốt planning, implementation, debugging, review và release
+
+CodexKit có thể hơi nặng khi:
+
+- repository chỉ là spike tạm hoặc prototype bỏ đi
+- không có nhu cầu về kiến trúc bền vững, review, hay kỷ luật release
+- team chỉ muốn một prompt pack tối giản thay vì một operating model cho repo
+
+## Đọc Thêm
+
+- Cài đặt: `docs/installation.md`
+- Tùy biến: `docs/customization-guide.md`
+- Lộ trình áp dụng: `docs/adoption-roadmap.md`
+- Checklist phát hành: `docs/release-checklist.md`
+- Mô hình bảo mật: `docs/security-model.md`
+
+## License
+
+Repository này dùng giấy phép MIT. Xem `LICENSE`.
