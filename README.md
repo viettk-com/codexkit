@@ -1,5 +1,7 @@
 # CodexKit Engineer Pro Final Plus
 
+English | [Tiếng Việt](README.vi.md) | [简体中文](README.zh-CN.md)
+
 CodexKit Engineer Pro Final Plus is a **Codex-native engineering operating system** for teams that want AI coding agents to behave less like “vibe coders” and more like senior engineers.
 
 This version is intentionally more opinionated than v1:

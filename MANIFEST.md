@@ -1,8 +1,8 @@
 # Manifest
 
 - kit: codexkit-engineer-pro-final-plus
-- total files: 238
-- approximate size: 463K
+- total files: 240
+- approximate size: 478K
 - agents: 22
 - skills: 35
 - aliases: 33
