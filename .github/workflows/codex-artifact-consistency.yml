@@ -1,0 +1,26 @@
+name: codex-artifact-consistency
+
+on:
+  pull_request:
+    paths:
+      - 'plans/active/**'
+      - 'plans/templates/**'
+      - 'docs/project-context/**'
+      - 'scripts/validate-plans.py'
+  workflow_dispatch:
+
+jobs:
+  validate-plans:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate active plans
+        run: |
+          if [ -d plans/active ]; then
+            python3 scripts/validate-plans.py plans/active
+          else
+            echo 'no plans/active directory present'
+          fi

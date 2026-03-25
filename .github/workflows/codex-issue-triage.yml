@@ -1,0 +1,42 @@
+name: Codex issue triage
+
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  codex_issue_triage:
+    if: github.event.label.name == 'codex-triage'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      final_message: ${{ steps.run_codex.outputs.final-message }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run Codex issue triage
+        id: run_codex
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/codex/prompts/issue-triage.md
+          output-file: codex-issue-triage.md
+          safety-strategy: drop-sudo
+          sandbox: read-only
+
+      - name: Comment triage note
+        if: steps.run_codex.outputs.final-message != ''
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ github.token }}
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: process.env.CODEX_FINAL_MESSAGE,
+            });
+        env:
+          CODEX_FINAL_MESSAGE: ${{ steps.run_codex.outputs.final-message }}

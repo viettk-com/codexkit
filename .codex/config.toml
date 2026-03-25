@@ -1,0 +1,100 @@
+# CodexKit Engineer Pro v3 project-scoped configuration
+# Review and adapt for each repository.
+
+model = "gpt-5.4"
+review_model = "gpt-5.4"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+service_tier = "fast"
+model_reasoning_effort = "medium"
+plan_mode_reasoning_effort = "high"
+model_reasoning_summary = "auto"
+model_verbosity = "medium"
+web_search = "cached"
+project_doc_max_bytes = 65536
+project_doc_fallback_filenames = ["AGENTS.md", "docs/project-context/index.md", "docs/project-context/08-project-constitution.md", "docs/project-context/13-agent-context.md", "docs/project-context/14-continuity.md", "docs/project-context/01-repo-overview.md", "CLAUDE.md", "TEAM_GUIDE.md", "ARCHITECTURE.md"]
+project_root_markers = [".git", "package.json", "pyproject.toml", "go.mod", "Cargo.toml"]
+personality = "pragmatic"
+
+[sandbox_workspace_write]
+network_access = false
+writable_roots = []
+
+[features]
+unified_exec = true
+skill_mcp_dependency_install = true
+
+[agents]
+max_threads = 10
+max_depth = 2
+
+[agents.bootstrap_curator]
+description = "Repository bootstrap specialist for deep repo scanning, durable project memory, and CodexKit adaptation."
+config_file = "./agents/bootstrap-curator.toml"
+[agents.chief_architect]
+description = "Architecture lead for greenfield systems, large features, and long-lived design decisions."
+config_file = "./agents/chief-architect.toml"
+[agents.system_mapper]
+description = "Brownfield mapper for current-state architecture, dependencies, hotspots, and change impact."
+config_file = "./agents/system-mapper.toml"
+[agents.domain_modeler]
+description = "Domain and contract specialist for entities, invariants, APIs, schemas, and event flows."
+config_file = "./agents/domain-modeler.toml"
+[agents.plan_architect]
+description = "Planning-first architect for phased implementation plans, safe slices, and rollout design."
+config_file = "./agents/plan-architect.toml"
+[agents.reviewer]
+description = "Owner-style code reviewer focused on correctness, regressions, and maintainability."
+config_file = "./agents/reviewer.toml"
+[agents.security_reviewer]
+description = "Security specialist for auth, trust boundaries, secrets, injection, and abuse paths."
+config_file = "./agents/security-reviewer.toml"
+[agents.perf_investigator]
+description = "Performance and scale specialist for latency, throughput, hot paths, concurrency, and caching."
+config_file = "./agents/perf-investigator.toml"
+[agents.reliability_engineer]
+description = "Reliability and operability specialist for failure modes, SLOs, alerts, and runbooks."
+config_file = "./agents/reliability-engineer.toml"
+[agents.migration_planner]
+description = "Schema and compatibility planner for staged migrations, backfills, and safe cutovers."
+config_file = "./agents/migration-planner.toml"
+[agents.test_guardian]
+description = "Testing specialist for reproductions, regression coverage, and validation commands."
+config_file = "./agents/test-guardian.toml"
+[agents.docs_researcher]
+description = "Read-only researcher for current framework, API, and platform behavior from primary sources."
+config_file = "./agents/docs-researcher.toml"
+[agents.docs_curator]
+description = "Documentation specialist for architecture notes, onboarding, changelog, and release docs."
+config_file = "./agents/docs-curator.toml"
+[agents.ci_triager]
+description = "CI failure analyst for flaky checks, red pipelines, and minimal recovery plans."
+config_file = "./agents/ci-triager.toml"
+[agents.browser_debugger]
+description = "UI debugger for browser reproduction, screenshots, console logs, and network evidence."
+config_file = "./agents/browser-debugger.toml"
+[agents.release_manager]
+description = "Release specialist for ship readiness, rollout sequencing, communications, and rollback notes."
+config_file = "./agents/release-manager.toml"
+[agents.incident_triager]
+description = "Incident response specialist for mitigation-first production issue handling."
+config_file = "./agents/incident-triager.toml"
+
+[agents.constitution_keeper]
+description = "Constitution specialist for engineering principles, architecture invariants, and governance guardrails."
+config_file = "./agents/constitution-keeper.toml"
+[agents.consistency_auditor]
+description = "Cross-artifact auditor for spec, architecture, plan, tasks, tests, and rollout consistency."
+config_file = "./agents/consistency-auditor.toml"
+[agents.knowledge_librarian]
+description = "Project memory curator for dashboards, continuity, archived lessons, and reusable repository knowledge."
+config_file = "./agents/knowledge-librarian.toml"
+[agents.debug_detective]
+description = "Systematic debugging specialist for repros, hypothesis trees, evidence, and durable regression guards."
+config_file = "./agents/debug-detective.toml"
+[agents.ui_ux_auditor]
+description = "Frontend design-system specialist for components, tokens, accessibility, and ux consistency."
+config_file = "./agents/ui-ux-auditor.toml"
+
+[tui]
+status_line = ["model_reasoning", "context", "git_branch", "tokens", "session_id"]

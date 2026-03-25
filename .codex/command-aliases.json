@@ -1,0 +1,1082 @@
+{
+  "namespace": "ck",
+  "forms": {
+    "chat": "/ck:<alias> [payload]",
+    "skill": "$ck-<alias> [payload]",
+    "canonical_skill": "$<skill-name>"
+  },
+  "routing_rules": [
+    "exact alias matches win over synonyms and typo recovery",
+    "the most specific alias wins over a broader category alias",
+    "safe typo normalization is allowed for common mistakes like plan-furture -> plan-feature",
+    "aliases are thin wrappers around canonical skills, scripts, agents, and artifacts; they do not bypass architecture gates",
+    "script-backed aliases should run the mapped script first, then continue with the mapped skills"
+  ],
+  "aliases": [
+    {
+      "alias": "help",
+      "category": "meta",
+      "summary": "show the codexkit command palette, routing rules, and the safest matching aliases for the current request.",
+      "payload_hint": "[optional topic or partial alias]",
+      "slash_forms": [
+        "/ck:help",
+        "/ck:aliases",
+        "/ck:list"
+      ],
+      "skill_forms": [
+        "$ck-help",
+        "$ck-aliases"
+      ],
+      "synonyms": [
+        "menu",
+        "commands"
+      ],
+      "typos": [],
+      "skills": [
+        "$command-router"
+      ],
+      "agents": [],
+      "scripts": [],
+      "artifacts": [
+        "docs/command-palette.md"
+      ],
+      "notes": "Use when you do not remember the shorthand or want the closest safe match.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "bootstrap",
+      "category": "discover",
+      "summary": "deeply scan the repository, refresh durable project memory, and update codexkit guidance for the current architecture.",
+      "payload_hint": "[optional focus area]",
+      "slash_forms": [
+        "/ck:bootstrap",
+        "/ck:scan"
+      ],
+      "skill_forms": [
+        "$ck-bootstrap",
+        "$ck-scan"
+      ],
+      "synonyms": [
+        "repo-scan",
+        "discover"
+      ],
+      "typos": [
+        "bootstap",
+        "bootstrp"
+      ],
+      "skills": [
+        "$bootstrap"
+      ],
+      "agents": [
+        "bootstrap_curator"
+      ],
+      "scripts": [
+        "python3 scripts/bootstrap-codexkit.py --apply"
+      ],
+      "artifacts": [
+        "docs/project-context/index.md",
+        "AGENTS.md managed bootstrap block"
+      ],
+      "notes": "Run this first in unfamiliar repositories or after major structural changes.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "refresh",
+      "category": "discover",
+      "summary": "refresh repository context, continuity memory, and managed codexkit guidance when context looks stale.",
+      "payload_hint": "[optional focus area]",
+      "slash_forms": [
+        "/ck:refresh",
+        "/ck:reindex"
+      ],
+      "skill_forms": [
+        "$ck-refresh",
+        "$ck-reindex"
+      ],
+      "synonyms": [
+        "resync",
+        "update-context"
+      ],
+      "typos": [
+        "refesh"
+      ],
+      "skills": [
+        "$bootstrap",
+        "$continuity-memory"
+      ],
+      "agents": [
+        "bootstrap_curator",
+        "knowledge_librarian"
+      ],
+      "scripts": [
+        "python3 scripts/bootstrap-codexkit.py --apply"
+      ],
+      "artifacts": [
+        "docs/project-context/index.md",
+        "docs/project-context/14-continuity.md"
+      ],
+      "notes": "Prefer this when bootstrap already exists but project context may have drifted.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "ctx",
+      "category": "discover",
+      "summary": "recover continuity memory, active initiative context, and durable lessons before planning or implementation.",
+      "payload_hint": "[optional initiative or area]",
+      "slash_forms": [
+        "/ck:ctx",
+        "/ck:memory"
+      ],
+      "skill_forms": [
+        "$ck-ctx",
+        "$ck-memory"
+      ],
+      "synonyms": [
+        "context",
+        "continuity"
+      ],
+      "typos": [],
+      "skills": [
+        "$continuity-memory"
+      ],
+      "agents": [
+        "knowledge_librarian"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "docs/project-context/14-continuity.md",
+        "docs/project-context/dashboard.md"
+      ],
+      "notes": "Use when switching initiatives or resuming paused work.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "constitution",
+      "category": "discover",
+      "summary": "check the current project constitution, invariants, and architecture guardrails before risky work.",
+      "payload_hint": "[optional area or change]",
+      "slash_forms": [
+        "/ck:constitution",
+        "/ck:rules"
+      ],
+      "skill_forms": [
+        "$ck-constitution",
+        "$ck-rules"
+      ],
+      "synonyms": [
+        "guardrails",
+        "invariants"
+      ],
+      "typos": [],
+      "skills": [
+        "$constitution-governance"
+      ],
+      "agents": [
+        "constitution_keeper"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "docs/project-context/08-project-constitution.md"
+      ],
+      "notes": "Best before architecture review, refactors, and cross-cutting changes.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "project",
+      "category": "scaffold",
+      "summary": "scaffold a new project or major subsystem initiative and start the greenfield architecture lane.",
+      "payload_hint": "<project-name-or-title>",
+      "slash_forms": [
+        "/ck:project",
+        "/ck:new-project"
+      ],
+      "skill_forms": [
+        "$ck-project",
+        "$ck-new-project"
+      ],
+      "synonyms": [
+        "greenfield",
+        "new-project"
+      ],
+      "typos": [],
+      "skills": [
+        "$project-bootstrap",
+        "$architecture-review",
+        "$plan-feature"
+      ],
+      "agents": [
+        "chief_architect",
+        "plan_architect"
+      ],
+      "scripts": [
+        "scripts/new-project.sh <project-name-or-title>"
+      ],
+      "artifacts": [
+        "plans/active/<timestamp>-<slug>/",
+        "architecture.md",
+        "nfr.md",
+        "plan.md"
+      ],
+      "notes": "Run the scaffold script first, then continue with the greenfield workflow.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "feature",
+      "category": "scaffold",
+      "summary": "scaffold a new feature initiative in an existing codebase and start the brownfield architecture lane.",
+      "payload_hint": "<feature-name-or-title>",
+      "slash_forms": [
+        "/ck:feature",
+        "/ck:new-feature"
+      ],
+      "skill_forms": [
+        "$ck-feature",
+        "$ck-new-feature"
+      ],
+      "synonyms": [
+        "bounded-feature",
+        "new-feature"
+      ],
+      "typos": [],
+      "skills": [
+        "$brownfield-mapping",
+        "$architecture-discovery",
+        "$plan-feature"
+      ],
+      "agents": [
+        "system_mapper",
+        "plan_architect"
+      ],
+      "scripts": [
+        "scripts/new-feature.sh <feature-name-or-title>"
+      ],
+      "artifacts": [
+        "plans/active/<timestamp>-<slug>/",
+        "analysis.md",
+        "architecture.md",
+        "plan.md"
+      ],
+      "notes": "Best for new L1 features inside an existing repository.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "init",
+      "category": "scaffold",
+      "summary": "create a new initiative of any change class and seed the right artifact set before planning.",
+      "payload_hint": "<L0|L1|L2|L3> <slug-or-title>",
+      "slash_forms": [
+        "/ck:init"
+      ],
+      "skill_forms": [
+        "$ck-init"
+      ],
+      "synonyms": [
+        "initiative",
+        "new"
+      ],
+      "typos": [],
+      "skills": [
+        "$spec-bootstrap",
+        "$plan-feature"
+      ],
+      "agents": [
+        "plan_architect"
+      ],
+      "scripts": [
+        "scripts/new-initiative.sh [--branch] <L0|L1|L2|L3> <slug-or-title>"
+      ],
+      "artifacts": [
+        "plans/active/<timestamp>-<slug>/"
+      ],
+      "notes": "Use when you need the exact change class rather than the project/feature shortcuts.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "map",
+      "category": "design",
+      "summary": "map the current system, hotspots, boundaries, and blast radius before changing an existing codebase.",
+      "payload_hint": "[subsystem or path]",
+      "slash_forms": [
+        "/ck:map",
+        "/ck:brownfield"
+      ],
+      "skill_forms": [
+        "$ck-map",
+        "$ck-brownfield"
+      ],
+      "synonyms": [
+        "system-map",
+        "repo-map"
+      ],
+      "typos": [],
+      "skills": [
+        "$brownfield-mapping"
+      ],
+      "agents": [
+        "system_mapper"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "analysis.md",
+        "docs/project-context/02-topology.md"
+      ],
+      "notes": "Prefer before refactors, migrations, or cross-module features.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "spec",
+      "category": "design",
+      "summary": "turn a fuzzy request into a product-facing spec before technical planning.",
+      "payload_hint": "[problem or feature request]",
+      "slash_forms": [
+        "/ck:spec"
+      ],
+      "skill_forms": [
+        "$ck-spec"
+      ],
+      "synonyms": [
+        "specify",
+        "requirements"
+      ],
+      "typos": [],
+      "skills": [
+        "$spec-bootstrap"
+      ],
+      "agents": [
+        "plan_architect"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "spec.md"
+      ],
+      "notes": "Useful when the request is still product-oriented and under-specified.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "arch",
+      "category": "design",
+      "summary": "analyze boundaries and produce an architecture review before coding a non-trivial change.",
+      "payload_hint": "[subsystem, feature, or boundary]",
+      "slash_forms": [
+        "/ck:arch",
+        "/ck:architecture"
+      ],
+      "skill_forms": [
+        "$ck-arch",
+        "$ck-architecture"
+      ],
+      "synonyms": [
+        "design-review"
+      ],
+      "typos": [],
+      "skills": [
+        "$architecture-discovery",
+        "$architecture-review"
+      ],
+      "agents": [
+        "chief_architect",
+        "system_mapper",
+        "domain_modeler"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "architecture.md",
+        "decision-matrix.md"
+      ],
+      "notes": "Use this before L1+ implementation when the target design is not yet explicit.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "nfr",
+      "category": "design",
+      "summary": "capture measurable performance, reliability, security, cost, and operability constraints.",
+      "payload_hint": "[feature, service, or workload]",
+      "slash_forms": [
+        "/ck:nfr"
+      ],
+      "skill_forms": [
+        "$ck-nfr"
+      ],
+      "synonyms": [
+        "quality-attributes",
+        "non-functional"
+      ],
+      "typos": [],
+      "skills": [
+        "$nfr-capture"
+      ],
+      "agents": [
+        "reliability_engineer",
+        "perf_investigator",
+        "security_reviewer"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "nfr.md",
+        "perf-budget.md",
+        "observability.md"
+      ],
+      "notes": "Use before planning if latency, scale, reliability, compliance, or operations matter.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "decision",
+      "category": "design",
+      "summary": "write or update an architecture decision record with options, trade-offs, and rationale.",
+      "payload_hint": "[decision topic]",
+      "slash_forms": [
+        "/ck:decision",
+        "/ck:adr"
+      ],
+      "skill_forms": [
+        "$ck-decision",
+        "$ck-adr"
+      ],
+      "synonyms": [
+        "tradeoff",
+        "rationale"
+      ],
+      "typos": [],
+      "skills": [
+        "$architecture-decision"
+      ],
+      "agents": [
+        "chief_architect"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "adr.md",
+        "decision-matrix.md"
+      ],
+      "notes": "Use when a choice should be durable and auditable later.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "plan",
+      "category": "design",
+      "summary": "turn the request and architecture into a phased implementation plan with validation, rollout, rollback, and docs impact.",
+      "payload_hint": "[feature or milestone context]",
+      "slash_forms": [
+        "/ck:plan",
+        "/ck:plan-feature"
+      ],
+      "skill_forms": [
+        "$ck-plan",
+        "$ck-plan-feature"
+      ],
+      "synonyms": [
+        "planning"
+      ],
+      "typos": [
+        "plan-future",
+        "plan-furture",
+        "planfeature",
+        "plan-featuer"
+      ],
+      "skills": [
+        "$plan-feature"
+      ],
+      "agents": [
+        "plan_architect"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "plan.md"
+      ],
+      "notes": "The example typo '/ck:plan-furture' should normalize here.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "tasks",
+      "category": "design",
+      "summary": "break the plan into ordered, reviewable implementation tasks with dependencies and validation checkpoints.",
+      "payload_hint": "[milestone or phase]",
+      "slash_forms": [
+        "/ck:tasks",
+        "/ck:task"
+      ],
+      "skill_forms": [
+        "$ck-tasks",
+        "$ck-task"
+      ],
+      "synonyms": [
+        "breakdown"
+      ],
+      "typos": [],
+      "skills": [
+        "$task-breakdown"
+      ],
+      "agents": [
+        "plan_architect"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "tasks.md",
+        "phases/*.md"
+      ],
+      "notes": "Use after the technical plan exists and before coding.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "ready",
+      "category": "design",
+      "summary": "prove that the current initiative is internally consistent and safe to implement before touching code.",
+      "payload_hint": "[optional slice or milestone]",
+      "slash_forms": [
+        "/ck:ready",
+        "/ck:gate"
+      ],
+      "skill_forms": [
+        "$ck-ready",
+        "$ck-gate"
+      ],
+      "synonyms": [
+        "readiness",
+        "consistency"
+      ],
+      "typos": [],
+      "skills": [
+        "$artifact-consistency",
+        "$implementation-readiness"
+      ],
+      "agents": [
+        "consistency_auditor",
+        "test_guardian"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "consistency-report.md",
+        "test-strategy.md"
+      ],
+      "notes": "Best right before starting implementation of the next slice.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "build",
+      "category": "build",
+      "summary": "implement the next safe slice with small diffs, narrow checks, and an explicit red-green-refactor loop.",
+      "payload_hint": "[slice, task, or milestone]",
+      "slash_forms": [
+        "/ck:build",
+        "/ck:impl"
+      ],
+      "skill_forms": [
+        "$ck-build",
+        "$ck-impl"
+      ],
+      "synonyms": [
+        "implement"
+      ],
+      "typos": [],
+      "skills": [
+        "$execute-plan",
+        "$tdd-loop"
+      ],
+      "agents": [
+        "plan_architect",
+        "test_guardian"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "tasks.md",
+        "report.md"
+      ],
+      "notes": "Use only after design and readiness gates are satisfied.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "fix",
+      "category": "build",
+      "summary": "debug a concrete bug report and deliver a minimal regression-safe fix.",
+      "payload_hint": "[repro, error, or symptom]",
+      "slash_forms": [
+        "/ck:fix"
+      ],
+      "skill_forms": [
+        "$ck-fix"
+      ],
+      "synonyms": [
+        "bugfix"
+      ],
+      "typos": [],
+      "skills": [
+        "$fix-issue"
+      ],
+      "agents": [
+        "debug_detective",
+        "test_guardian"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "report.md",
+        "test-strategy.md"
+      ],
+      "notes": "Use when the bug is scoped enough that full architecture rediscovery is unnecessary.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "debug",
+      "category": "build",
+      "summary": "run a disciplined hypothesis-and-evidence debugging loop for unclear or cross-cutting failures.",
+      "payload_hint": "[symptom, log, or failing test]",
+      "slash_forms": [
+        "/ck:debug"
+      ],
+      "skill_forms": [
+        "$ck-debug"
+      ],
+      "synonyms": [
+        "triage"
+      ],
+      "typos": [],
+      "skills": [
+        "$systematic-debugging"
+      ],
+      "agents": [
+        "debug_detective"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "incident.md",
+        "report.md"
+      ],
+      "notes": "Prefer this when you do not yet know the root cause.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "test",
+      "category": "build",
+      "summary": "design the right validation mix across unit, integration, contract, performance, and rollout checks.",
+      "payload_hint": "[change or slice]",
+      "slash_forms": [
+        "/ck:test",
+        "/ck:tests"
+      ],
+      "skill_forms": [
+        "$ck-test",
+        "$ck-tests"
+      ],
+      "synonyms": [
+        "validate"
+      ],
+      "typos": [],
+      "skills": [
+        "$test-strategy"
+      ],
+      "agents": [
+        "test_guardian"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "test-strategy.md"
+      ],
+      "notes": "Use before coding or when validation scope is unclear.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "api",
+      "category": "build",
+      "summary": "review api, schema, event, or sdk contract changes before they leak across boundaries.",
+      "payload_hint": "[contract, endpoint, schema, or event]",
+      "slash_forms": [
+        "/ck:api",
+        "/ck:contract"
+      ],
+      "skill_forms": [
+        "$ck-api",
+        "$ck-contract"
+      ],
+      "synonyms": [
+        "schema",
+        "event-contract"
+      ],
+      "typos": [],
+      "skills": [
+        "$api-contract-review"
+      ],
+      "agents": [
+        "domain_modeler"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "interfaces.md",
+        "data-model.md"
+      ],
+      "notes": "Use whenever public or cross-module contract shapes change.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "migrate",
+      "category": "build",
+      "summary": "design a safe staged migration with expand-contract, backfill, cutover, and rollback discipline.",
+      "payload_hint": "[schema, cache, queue, or compatibility change]",
+      "slash_forms": [
+        "/ck:migrate",
+        "/ck:migration"
+      ],
+      "skill_forms": [
+        "$ck-migrate",
+        "$ck-migration"
+      ],
+      "synonyms": [
+        "cutover"
+      ],
+      "typos": [],
+      "skills": [
+        "$migration-guard"
+      ],
+      "agents": [
+        "migration_planner"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "rollout.md",
+        "risk-register.md",
+        "runbook.md"
+      ],
+      "notes": "Use before shipping any persistent or compatibility-sensitive data change.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "review",
+      "category": "quality",
+      "summary": "perform an owner-style review of the current working tree, diff, or milestone implementation.",
+      "payload_hint": "[optional diff or focus area]",
+      "slash_forms": [
+        "/ck:review"
+      ],
+      "skill_forms": [
+        "$ck-review"
+      ],
+      "synonyms": [
+        "owner-review"
+      ],
+      "typos": [],
+      "skills": [
+        "$review-owner"
+      ],
+      "agents": [
+        "reviewer"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "docs/code-review.md"
+      ],
+      "notes": "Use between slices and before opening a pull request.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "sec",
+      "category": "quality",
+      "summary": "review security posture for auth, secrets, trust boundaries, injection, and abuse paths.",
+      "payload_hint": "[change or subsystem]",
+      "slash_forms": [
+        "/ck:sec",
+        "/ck:security"
+      ],
+      "skill_forms": [
+        "$ck-sec",
+        "$ck-security"
+      ],
+      "synonyms": [
+        "threat",
+        "hardening"
+      ],
+      "typos": [],
+      "skills": [
+        "$security-review"
+      ],
+      "agents": [
+        "security_reviewer"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "threat-model.md"
+      ],
+      "notes": "Prefer for auth, public input, file access, redirects, or command execution.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "perf",
+      "category": "quality",
+      "summary": "check latency, throughput, hot paths, query shape, caching, and scaling assumptions.",
+      "payload_hint": "[endpoint, workload, or component]",
+      "slash_forms": [
+        "/ck:perf",
+        "/ck:performance"
+      ],
+      "skill_forms": [
+        "$ck-perf",
+        "$ck-performance"
+      ],
+      "synonyms": [
+        "latency",
+        "scale"
+      ],
+      "typos": [],
+      "skills": [
+        "$perf-check"
+      ],
+      "agents": [
+        "perf_investigator"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "perf-budget.md",
+        "observability.md"
+      ],
+      "notes": "Use for hot paths, large data sets, concurrency, or user-visible responsiveness.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "obs",
+      "category": "quality",
+      "summary": "review logs, metrics, traces, alerts, and runbook coverage for critical changes.",
+      "payload_hint": "[workflow, service, or deployment]",
+      "slash_forms": [
+        "/ck:obs",
+        "/ck:observability"
+      ],
+      "skill_forms": [
+        "$ck-obs",
+        "$ck-observability"
+      ],
+      "synonyms": [
+        "monitoring",
+        "slo"
+      ],
+      "typos": [],
+      "skills": [
+        "$observability-review"
+      ],
+      "agents": [
+        "reliability_engineer"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "observability.md",
+        "runbook.md"
+      ],
+      "notes": "Use before ship for critical paths, background jobs, and migrations.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "ux",
+      "category": "quality",
+      "summary": "inspect design-system fit, component primitives, accessibility, and visual consistency.",
+      "payload_hint": "[screen, component, or user flow]",
+      "slash_forms": [
+        "/ck:ux",
+        "/ck:ui"
+      ],
+      "skill_forms": [
+        "$ck-ux",
+        "$ck-ui"
+      ],
+      "synonyms": [
+        "design-system",
+        "frontend"
+      ],
+      "typos": [],
+      "skills": [
+        "$design-system-forensics"
+      ],
+      "agents": [
+        "ui_ux_auditor"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "docs/project-context/12-design-system.md"
+      ],
+      "notes": "Use when frontend changes must preserve tokens, primitives, and interaction patterns.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "docs",
+      "category": "quality",
+      "summary": "synchronize architecture notes, setup docs, release notes, and operational guidance after changes.",
+      "payload_hint": "[optional changed area]",
+      "slash_forms": [
+        "/ck:docs"
+      ],
+      "skill_forms": [
+        "$ck-docs"
+      ],
+      "synonyms": [
+        "doc-sync"
+      ],
+      "typos": [],
+      "skills": [
+        "$docs-sync"
+      ],
+      "agents": [
+        "docs_curator"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "README.md",
+        "docs/",
+        "CHANGELOG.md"
+      ],
+      "notes": "Use when behavior, architecture, rollout, or operations changed.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "ci",
+      "category": "quality",
+      "summary": "triage red or flaky ci with a root-cause-first read of the failing jobs and logs.",
+      "payload_hint": "[job name, failure, or log snippet]",
+      "slash_forms": [
+        "/ck:ci"
+      ],
+      "skill_forms": [
+        "$ck-ci"
+      ],
+      "synonyms": [
+        "pipeline",
+        "checks"
+      ],
+      "typos": [],
+      "skills": [
+        "$ci-triage"
+      ],
+      "agents": [
+        "ci_triager"
+      ],
+      "scripts": [],
+      "artifacts": [
+        ".github/workflows/"
+      ],
+      "notes": "Use for failing pipelines, flaky tests, or pre-merge gate issues.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "pr",
+      "category": "ship",
+      "summary": "prepare a clean pull request summary with risks, validation, rollout notes, and reviewer guidance.",
+      "payload_hint": "[optional target branch or reviewer context]",
+      "slash_forms": [
+        "/ck:pr"
+      ],
+      "skill_forms": [
+        "$ck-pr"
+      ],
+      "synonyms": [
+        "pull-request",
+        "merge-request"
+      ],
+      "typos": [],
+      "skills": [
+        "$pr-prep"
+      ],
+      "agents": [
+        "reviewer",
+        "docs_curator"
+      ],
+      "scripts": [],
+      "artifacts": [
+        ".github/PULL_REQUEST_TEMPLATE.md"
+      ],
+      "notes": "Use after review passes and before requesting human review.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "ship",
+      "category": "ship",
+      "summary": "assess release readiness, rollout safety, rollback clarity, and communication gaps before shipping.",
+      "payload_hint": "[release, branch, or deployment scope]",
+      "slash_forms": [
+        "/ck:ship",
+        "/ck:release"
+      ],
+      "skill_forms": [
+        "$ck-ship",
+        "$ck-release"
+      ],
+      "synonyms": [
+        "deploy-check"
+      ],
+      "typos": [],
+      "skills": [
+        "$release-readiness"
+      ],
+      "agents": [
+        "release_manager",
+        "reliability_engineer"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "docs/release-checklist.md",
+        "runbooks/release-rollout.md",
+        "runbooks/rollback.md"
+      ],
+      "notes": "Use before deploy, merge trains, or release freezes. Pair with /ck:migrate or /ck:obs when relevant.",
+      "prompt_wrapper": true
+    },
+    {
+      "alias": "incident",
+      "category": "ship",
+      "summary": "triage an active incident with mitigation-first analysis, next actions, and follow-up checks.",
+      "payload_hint": "[symptom, alert, or user impact]",
+      "slash_forms": [
+        "/ck:incident"
+      ],
+      "skill_forms": [
+        "$ck-incident"
+      ],
+      "synonyms": [
+        "outage",
+        "sev"
+      ],
+      "typos": [],
+      "skills": [
+        "$incident-response"
+      ],
+      "agents": [
+        "incident_triager"
+      ],
+      "scripts": [],
+      "artifacts": [
+        "plans/templates/incident.md",
+        "runbooks/incident-triage.md"
+      ],
+      "notes": "Use when production impact or support escalation is plausible.",
+      "prompt_wrapper": false
+    },
+    {
+      "alias": "close",
+      "category": "ship",
+      "summary": "close the active initiative, archive durable lessons, and update continuity memory for future agents.",
+      "payload_hint": "[optional initiative path]",
+      "slash_forms": [
+        "/ck:close",
+        "/ck:closeout"
+      ],
+      "skill_forms": [
+        "$ck-close",
+        "$ck-closeout"
+      ],
+      "synonyms": [
+        "archive",
+        "finish"
+      ],
+      "typos": [],
+      "skills": [
+        "$closeout-learning",
+        "$continuity-memory"
+      ],
+      "agents": [
+        "knowledge_librarian"
+      ],
+      "scripts": [
+        "python3 scripts/close-initiative.py"
+      ],
+      "artifacts": [
+        "plans/archive/",
+        "docs/project-context/14-continuity.md"
+      ],
+      "notes": "Use after implementation and validation are done, not as a substitute for review.",
+      "prompt_wrapper": true
+    }
+  ]
+}

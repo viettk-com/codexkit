@@ -1,0 +1,30 @@
+name: Codex release readiness
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  codex_release_readiness:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Run Codex release readiness check
+        uses: openai/codex-action@v1
+        with:
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          prompt-file: .github/codex/prompts/release-readiness.md
+          output-file: codex-release-readiness.md
+          safety-strategy: drop-sudo
+          sandbox: read-only
+
+      - name: Upload report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: codex-release-readiness
+          path: codex-release-readiness.md

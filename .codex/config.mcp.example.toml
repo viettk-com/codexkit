@@ -1,0 +1,29 @@
+# Example MCP configuration for CodexKit Engineer Pro v2.
+# Copy only the blocks you need into .codex/config.toml.
+
+# Official OpenAI developer docs MCP server.
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+# Context7 for up-to-date package and framework docs.
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+
+# Example GitHub MCP server.
+# [mcp_servers.github]
+# command = "npx"
+# args = ["-y", "@modelcontextprotocol/server-github"]
+# [mcp_servers.github.env]
+# GITHUB_PERSONAL_ACCESS_TOKEN = "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+
+# Example browser or Chrome DevTools MCP server.
+# [mcp_servers.browser]
+# url = "http://localhost:3000/mcp"
+# enabled_tools = ["open", "screenshot", "click"]
+
+# Example internal docs server.
+# [mcp_servers.internalDocs]
+# command = "python3"
+# args = ["tools/internal_docs_mcp.py"]
+# startup_timeout_sec = 20
