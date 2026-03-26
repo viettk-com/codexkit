@@ -1,0 +1,53 @@
+{
+  "name": "create-codexkit",
+  "version": "0.1.0",
+  "description": "Publish-ready npm installer for adding CodexKit to a new or existing repository.",
+  "license": "MIT",
+  "homepage": "https://github.com/viettk-com/codexkit",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/viettk-com/codexkit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/viettk-com/codexkit/issues"
+  },
+  "bin": {
+    "create-codexkit": "bin/create-codexkit.js"
+  },
+  "files": [
+    "AGENTS.md",
+    ".agents",
+    ".codex",
+    ".github",
+    "docs",
+    "plans",
+    "runbooks",
+    "scripts",
+    "bin",
+    "installer",
+    "README.md",
+    "README.vi.md",
+    "README.zh-CN.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "MANIFEST.md",
+    "!scripts/__pycache__",
+    "!scripts/__pycache__/**",
+    "!**/*.pyc"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "codex",
+    "ai",
+    "developer-tools",
+    "engineering-workflow",
+    "bootstrap",
+    "scaffold"
+  ],
+  "scripts": {
+    "check:installer": "node --check bin/create-codexkit.js",
+    "pack:dry-run": "npm pack --dry-run"
+  }
+}

@@ -9,6 +9,14 @@ python3 scripts/validate-aliases.py
 python3 scripts/validate-bootstrap.py
 python3 -m compileall scripts >/dev/null
 
+if [ -f package.json ] && command -v node >/dev/null 2>&1; then
+  node --check bin/create-codexkit.js
+fi
+
+if [ -f package.json ] && command -v npm >/dev/null 2>&1; then
+  npm pack --dry-run >/dev/null 2>&1
+fi
+
 if [ -d plans/active ] && find plans/active -mindepth 1 -maxdepth 1 -type d | grep -q .; then
   python3 scripts/validate-plans.py plans/active
 else

@@ -1,8 +1,8 @@
 # Manifest
 
 - kit: codexkit-engineer-pro-final-plus
-- total files: 240
-- approximate size: 481K
+- total files: 245
+- approximate size: 493K
 - agents: 22
 - skills: 35
 - aliases: 33
@@ -21,3 +21,4 @@
 - generated quick prompt wrappers for the highest-frequency commands
 - typo-tolerant routing for safe command mistakes like `plan-furture`
 - imported shorthand design patterns from Superpowers, Spec Kit, and CodyMaster without duplicating the core workflow
+- publish-ready `create-codexkit` npm installer for `npm create` and `npx create-codexkit`

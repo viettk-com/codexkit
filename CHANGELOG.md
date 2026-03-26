@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- added a publish-ready `create-codexkit` npm installer for `npm create` and `npx` flows
+- added install logic for creating a new directory or installing into an existing repo
+- updated docs to show npm / npx onboarding alongside the manual bundle-copy fallback
+
 ## Final Plus
 
 - added `/ck:` and `$ck-` quick command aliases as thin wrappers over canonical skills

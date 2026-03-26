@@ -1,0 +1,18 @@
+# Codex action outputs
+codex-output.md
+codex-release-readiness.md
+codex-docs-drift.md
+codex-issue-triage.md
+codex-architecture-review.md
+
+# local Codex overrides
+.codex/config.local.toml
+
+# local clutter
+.DS_Store
+Thumbs.db
+*.log
+
+# Python cache artifacts
+__pycache__/
+*.pyc

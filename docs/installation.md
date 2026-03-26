@@ -1,6 +1,24 @@
 # Installation
 
-## 1. Copy the kit into your repository root
+## 1. Preferred install path: npm / npx
+
+This repository now includes a publish-ready installer package.
+
+After publishing it to npm as `create-codexkit`, you can use:
+
+```bash
+npm create codexkit@latest my-repo
+```
+
+Or install the kit into an existing repository:
+
+```bash
+npx create-codexkit@latest init .
+```
+
+That installer copies the CodexKit payload, merges a CodexKit block into `.gitignore`, and then leaves you on the same bootstrap flow as a manual install.
+
+## 2. Manual fallback: copy the kit into your repository root
 
 Copy or unpack this bundle into the repository root so these paths exist:
 
@@ -12,7 +30,9 @@ Copy or unpack this bundle into the repository root so these paths exist:
 - `docs/`
 - `scripts/`
 
-## 2. Bootstrap repo context
+If you copy from the source repository directly, exclude npm packaging files such as `package.json`, `bin/`, and `installer/`.
+
+## 3. Bootstrap repo context
 
 Run:
 
@@ -26,7 +46,7 @@ Then review:
 - `docs/project-context/07-bootstrap-report.md`
 - the managed bootstrap block in `AGENTS.md`
 
-## 3. Review Codex defaults
+## 4. Review Codex defaults
 
 Open `.codex/config.toml` and decide:
 
@@ -35,22 +55,23 @@ Open `.codex/config.toml` and decide:
 - whether cached web search is acceptable
 - which subagents you actually want
 
-## 4. Enable only the MCP servers you need
+## 5. Enable only the MCP servers you need
 
 Start from `.codex/config.mcp.example.toml`.
 Prefer the smallest tool surface that still helps your workflow.
 
-## 5. Check the kit locally
+## 6. Check the kit locally
 
 ```bash
 scripts/check-kit.sh
 ```
 
-## 6. Learn the quick commands
+## 7. Learn the quick commands
 
 CodexKit now supports a quick command palette for faster day-to-day use:
 
 - `/ck:bootstrap`
+- `/ck:new-project billing-platform`
 - `/ck:feature tenant-rate-limits`
 - `/ck:plan-feature add per-tenant rate limits`
 - `/ck:ready`
@@ -60,7 +81,7 @@ CodexKit now supports a quick command palette for faster day-to-day use:
 
 Read `docs/command-palette.md` for the full alias map, script-backed shortcuts, and payload rules.
 
-## 7. Bootstrap a first initiative
+## 8. Bootstrap a first initiative
 
 ### New project
 
@@ -74,7 +95,7 @@ scripts/new-project.sh billing-platform
 scripts/new-feature.sh tenant-rate-limits
 ```
 
-## 8. Read these docs first
+## 9. Read these docs first
 
 - `docs/bootstrap-playbook.md`
 - `docs/project-memory-system.md`

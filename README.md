@@ -41,6 +41,24 @@ CodexKit fixes that by giving every repository a shared operating model:
 
 ## Quick Start
 
+### Publish-ready npm / npx install
+
+After publishing this repository to npm as `create-codexkit`, users can install it like this:
+
+```bash
+npm create codexkit@latest my-repo
+```
+
+Or add CodexKit into an existing repository:
+
+```bash
+npx create-codexkit@latest init .
+```
+
+That gives you the kind of product-style onboarding flow teams expect, while still landing on the same CodexKit workflow surface.
+
+### Manual install fallback
+
 ### 1. Copy the kit into your repository root
 
 Make sure these paths exist:
@@ -52,6 +70,8 @@ Make sure these paths exist:
 - `plans/templates/`
 - `docs/`
 - `scripts/`
+
+If you copy files manually from this repository, exclude npm-packaging files such as `package.json`, `bin/`, and `installer/`.
 
 ### 2. Bootstrap the repository context
 
@@ -180,6 +200,7 @@ Examples:
 
 ```text
 /ck:bootstrap
+/ck:new-project billing-platform
 /ck:feature tenant-rate-limits
 /ck:plan-feature add per-tenant rate limits
 /ck:ready

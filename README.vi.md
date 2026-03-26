@@ -41,6 +41,24 @@ CodexKit xử lý vấn đề đó bằng cách cung cấp cho mỗi repository 
 
 ## Bắt Đầu Nhanh
 
+### Cài theo kiểu npm / npx
+
+Sau khi publish repository này lên npm với tên `create-codexkit`, người dùng có thể cài theo kiểu:
+
+```bash
+npm create codexkit@latest my-repo
+```
+
+Hoặc thêm CodexKit vào một repository có sẵn:
+
+```bash
+npx create-codexkit@latest init .
+```
+
+Cách này cho trải nghiệm onboarding kiểu sản phẩm lớn hơn, nhưng vẫn đổ về đúng workflow hiện tại của CodexKit.
+
+### Cài thủ công khi cần
+
 ### 1. Chép bộ kit vào thư mục gốc repository
 
 Đảm bảo các đường dẫn sau tồn tại:
@@ -52,6 +70,8 @@ CodexKit xử lý vấn đề đó bằng cách cung cấp cho mỗi repository 
 - `plans/templates/`
 - `docs/`
 - `scripts/`
+
+Nếu chép tay từ repository này, hãy loại trừ các file phục vụ packaging npm như `package.json`, `bin/`, và `installer/`.
 
 ### 2. Bootstrap ngữ cảnh repository
 
@@ -180,6 +200,7 @@ Ví dụ:
 
 ```text
 /ck:bootstrap
+/ck:new-project billing-platform
 /ck:feature tenant-rate-limits
 /ck:plan-feature add per-tenant rate limits
 /ck:ready
